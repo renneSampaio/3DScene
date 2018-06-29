@@ -7,3 +7,4 @@ addons:
     packages:
       - freeglut3-dev
       - libglm-dev
+      - libglew-dev
