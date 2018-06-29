@@ -6,7 +6,7 @@
 class Material
 {
     public:
-	Apply();
+	void Apply();
 
 	glm::vec4 GetAmbientColor() const;
 	glm::vec4 GetDiffuseColor() const;
