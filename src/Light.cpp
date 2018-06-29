@@ -66,8 +66,11 @@ void Light::SetAmbientColor(glm::vec4 color)
 
 void Light::Apply() const
 {
-   glLightfv(GL_LIGHT0+id, GL_POSITION, &position.x);
-   glLightfv(GL_LIGHT0+id, GL_DIFFUSE, &diffuseColor.r); 
-   glLightfv(GL_LIGHT0+id, GL_SPECULAR, &specularColor.r);
-   glLightfv(GL_LIGHT0+id, GL_AMBIENT, &ambientColor.r);
+    if (!glIsEnabled(GL_LIGHT0+id))
+	return;
+
+    glLightfv(GL_LIGHT0+id, GL_POSITION, &position.x);
+    glLightfv(GL_LIGHT0+id, GL_DIFFUSE, &diffuseColor.r); 
+    glLightfv(GL_LIGHT0+id, GL_SPECULAR, &specularColor.r);
+    glLightfv(GL_LIGHT0+id, GL_AMBIENT, &ambientColor.r);
 }
