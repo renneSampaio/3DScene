@@ -9,9 +9,3 @@ addons:
       - libglm-dev
       - libglew-dev
 
-deploy:
-  provider: releases
-  api_key: ccbe8da19cba006fbff0a6faecd4c83b78f053ea
-  file: bin/main
-  skip-cleanup: true
-  
