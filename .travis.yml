@@ -1,0 +1,9 @@
+language: cpp
+compiler: gcc
+script: make
+
+addons:
+  apt:
+    packages:
+      - freeglut3-dev
+      - libglm-dev
