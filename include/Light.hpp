@@ -8,7 +8,6 @@ class Light
 {
     public:
 	Light(int id);
-	~Light();
 
 	void Toogle() const;
 	void TurnOn() const;
