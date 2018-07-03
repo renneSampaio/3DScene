@@ -7,6 +7,15 @@ Mesh::Mesh()
 {
 }
 
+Mesh::Mesh(std::vector<glm::vec3> verts, std::vector<glm::vec3> normals, std::vector<glm::vec2> texCoords, Material& mat)
+{
+    UpdateVerts(verts);
+    UpdateNormals(normals);
+    UpdateTexCoords(texCoords);
+    UpdateMaterial(mat);
+    UpdateBuffers();
+}
+
 Mesh::~Mesh()
 {
 }
@@ -26,9 +35,9 @@ std::vector<glm::vec2> Mesh::GetTexCoords() const
     return texCoords;
 }
 
-std::vector<glm::vec3> Mesh::GetFaces() const
+Material Mesh::GetMaterial() const
 {
-    return faces;
+    return material;
 }
 
 void Mesh::UpdateVerts(const std::vector<glm::vec3>& newVerts)
@@ -46,9 +55,9 @@ void Mesh::UpdateTexCoords(const std::vector<glm::vec2>& newTexCoords)
     texCoords = newTexCoords;
 }
 
-void Mesh::UpdateFaces(const std::vector<glm::vec3>& newFaces)
+void Mesh::UpdateMaterial(Material mat)
 {
-    faces = newFaces;
+    material = mat;
 }
 
 void Mesh::UpdateBuffers()

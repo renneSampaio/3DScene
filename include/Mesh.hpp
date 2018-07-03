@@ -11,21 +11,24 @@
 
 #include <vector>
 
+#include "Material.hpp"
+
 class Mesh
 {
     public:
 	Mesh();
+	Mesh(std::vector<glm::vec3> verts, std::vector<glm::vec3> normals, std::vector<glm::vec2> texCoords, Material& mat);
 	~Mesh();
 
 	std::vector<glm::vec3> GetVerts() const;
 	std::vector<glm::vec3> GetNormals() const;
 	std::vector<glm::vec2> GetTexCoords() const;
-	std::vector<glm::vec3> GetFaces() const;
+	Material GetMaterial() const;
 
 	void UpdateVerts(const std::vector<glm::vec3>& newVerts);
 	void UpdateNormals(const std::vector<glm::vec3>& newNormals);
 	void UpdateTexCoords(const std::vector<glm::vec2>& newTexCoords);
-	void UpdateFaces(const std::vector<glm::vec3>& newFaces);
+	void UpdateMaterial(Material mat);
 
 	void UpdateBuffers();
 
@@ -38,7 +41,8 @@ class Mesh
 	std::vector<glm::vec3> verts;
 	std::vector<glm::vec3> normals;
 	std::vector<glm::vec2> texCoords;
-	std::vector<glm::vec3> faces;
+
+	Material material;
 
 };
 
