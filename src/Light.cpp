@@ -3,7 +3,7 @@
 #include <GL/freeglut.h>
 
 Light::Light(int id)
-    :id(id)
+    :id(id), constantAttenuation(1.0), linearAttenuation(0.0), quadraticAttenuation(0.0)
 {}
 
 void Light::Toogle() const
@@ -44,6 +44,21 @@ glm::vec4 Light::GetAmbientColor() const
     return ambientColor;
 }
 
+float Light::GetConstantAttenuation() const
+{
+    return constantAttenuation;
+}
+
+float Light::GetLinearAttenuation() const
+{
+    return linearAttenuation;
+}
+
+float Light::GetQuadraticAttenuation() const
+{
+    return quadraticAttenuation;
+}
+
 void Light::SetPosition(glm::vec4 newPosition)
 {
     position = newPosition;
@@ -64,6 +79,21 @@ void Light::SetAmbientColor(glm::vec4 color)
     ambientColor = color;
 }
 
+void Light::SetConstantAttenuation(float att)
+{
+    constantAttenuation = att;
+}
+
+void Light::SetLinearAttenuation(float att)
+{
+    linearAttenuation = att;
+}
+
+void Light::SetQuadraticAttenuation(float att)
+{
+    quadraticAttenuation = att;
+}
+
 void Light::Apply() const
 {
     if (!glIsEnabled(GL_LIGHT0+id))
@@ -73,4 +103,7 @@ void Light::Apply() const
     glLightfv(GL_LIGHT0+id, GL_DIFFUSE, &diffuseColor.r); 
     glLightfv(GL_LIGHT0+id, GL_SPECULAR, &specularColor.r);
     glLightfv(GL_LIGHT0+id, GL_AMBIENT, &ambientColor.r);
+    glLightf(GL_LIGHT0+id, GL_CONSTANT_ATTENUATION, constantAttenuation);
+    glLightf(GL_LIGHT0+id, GL_LINEAR_ATTENUATION, linearAttenuation);
+    glLightf(GL_LIGHT0+id, GL_QUADRATIC_ATTENUATION, quadraticAttenuation);
 }
