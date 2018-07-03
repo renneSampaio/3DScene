@@ -7,7 +7,7 @@ void Material::Apply()
     glMaterialfv(GL_FRONT, GL_AMBIENT, &ambientColor.r);
     glMaterialfv(GL_FRONT, GL_DIFFUSE, &diffuseColor.r);
     glMaterialfv(GL_FRONT, GL_SPECULAR, &specularColor.r);
-    glMaterialfv(GL_FRONT, GL_SHININESS, &shininess);
+    glMaterialf(GL_FRONT, GL_SHININESS, shininess * 128.0);
 }
 
 glm::vec4 Material::GetAmbientColor() const
