@@ -5,7 +5,7 @@
 #include <vector>
 
 namespace ModelLoader {
-    std::vector<Mesh> LoadMeshesFromOBJ(const char* filename);
+    Mesh* LoadMeshFromOBJ(const char* filename);
 }
 
 #endif

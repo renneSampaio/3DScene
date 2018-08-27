@@ -11,6 +11,11 @@ glm::vec3 Camera::GetPosition() const
     return position;
 }
 
+glm::vec3 Camera::GetCenter() const
+{
+    return center;
+}
+
 float Camera::GetFovy() const
 {
     return fovy;
@@ -24,6 +29,11 @@ float Camera::GetAspectRatio() const
 void Camera::SetPosition(glm::vec3 newPos)
 {
     position = newPos;
+}
+
+void Camera::SetCenter(glm::vec3 newCenter)
+{
+    center = newCenter;
 }
 
 void Camera::Translate(glm::vec3 amount)
@@ -53,7 +63,7 @@ void Camera::Apply()
     glLoadIdentity();
     gluLookAt(
 	    position.x, position.y, position.z,
-	    position.x, position.y, position.z + 1.0,
+	    center.x, center.y, center.z,
 	    up.x, up.y, up.z );
 }
 

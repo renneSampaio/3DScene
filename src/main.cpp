@@ -1,27 +1,74 @@
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 
+#include <string>
+#include <vector>
+
+#include <glm/mat4x4.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
+#include "ModelLoader.hpp"
 #include "Mesh.hpp"
 #include "Camera.hpp"
+#include "Material.hpp"
+#include "Light.hpp"
 
 void draw();
 void reshape(int width, int height);
 
-std::vector<glm::vec3> verts {
-    glm::vec3( 0.5f, -0.5f, 2.0f),
-    glm::vec3(-0.5f, -0.5f, 2.0f),
-    glm::vec3( 0.0f,  0.5f, 2.0f)
+std::vector<std::string> objetos {
+    "models/chao.obj",         
+    "models/sofa.obj",
+    "models/mesa.obj",
+    "models/escultura_base.obj",
+    "models/escultura.obj", 
+    "models/icoesfera.obj",
+    "models/tv_mesa.obj",
+    "models/tv.obj",
+    "models/tv_tela.obj"
 };
 
-std::vector<glm::vec3> colors {
-    glm::vec3(1.0, 0.0, 0.0),
-    glm::vec3(0.0, 1.0, 0.0),
-    glm::vec3(0.0, 0.0, 1.0),
-};
-
-Mesh* mesh;
+std::vector<Mesh*> meshes;
 
 Camera camera;
+Light light0 {0};
+Light light1 {1};
+
+float rotation = 0;
+float rotationStep = 1;
+
+void initializeMeshes()
+{
+    for (auto obj : objetos)
+    {
+	Mesh* mesh = ModelLoader::LoadMeshFromOBJ(obj.c_str());
+	mesh->UpdateBuffers();
+	meshes.push_back(mesh);
+    }
+}
+
+void InitializeLights()
+{
+    light0.SetPosition(glm::vec4(0.0, 10.0, 0.0, 1.0));
+    light0.SetDiffuseColor(glm::vec4(1.0, 1.0, 1.0, 1.0));
+    light0.SetAmbientColor(glm::vec4(.01, .01, .01, 1.0));
+    light0.SetSpecularColor(glm::vec4(1, 1, 1, 1.0));
+    light0.SetQuadraticAttenuation(.03);
+
+    light1.SetPosition(glm::vec4(0.0, 0.0, 10.0, 1.0));
+    light1.SetDiffuseColor(glm::vec4(1.0, 1.0, 1.0, 1.0));
+    light1.SetAmbientColor(glm::vec4(.2, .2, .2, 1.0));
+    light1.SetSpecularColor(glm::vec4(1, 1, 1, 1.0));
+    light1.SetQuadraticAttenuation(.02);
+
+    float lmodel_ambient[] = {0.1, 0.1, 0.1, 1.0};
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lmodel_ambient);
+
+    glShadeModel(GL_SMOOTH);
+
+    light0.TurnOn();
+    light1.TurnOn();
+}
 
 int main(int argc, char** argv)
 {
@@ -35,34 +82,18 @@ int main(int argc, char** argv)
     glutDisplayFunc(draw);
     glutReshapeFunc(reshape);
 
-    mesh = new Mesh();
-    mesh->UpdateVerts(verts);
-    mesh->UpdateNormals(colors);
-    //mesh->UpdateBuffers();
+    initializeMeshes();
+    InitializeLights();
 
-    camera.SetPosition(glm::vec3(0.0, 0.0, -5.0));
+    camera.SetPosition(glm::vec3(0.0, 7.0, -15.0));
+    camera.SetCenter(glm::vec3(0.0));
 
     glClearColor(.1, .1, .1, 1);
     
-    //LIGHTNING AND MATERIAL
-    GLfloat mat_specular[] = {1.0, 1.0, 1.0, 1.0};
-    GLfloat mat_shininess[] = { 50.0 };
-    GLfloat lightPosition[] = {1.0, 1.0, 1.0, 0.0};
-    GLfloat whiteLight[] = {1.0, 1.0, 1.0, 1.0};
-    GLfloat lmodel_ambient[] = {.1, .1, .1, 1.0};
-    glShadeModel(GL_SMOOTH);
-    glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
-    glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
-    glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, whiteLight);
-    glLightfv(GL_LIGHT0, GL_SPECULAR, whiteLight);
-    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lmodel_ambient);
-
     
     glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
-    //
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
 
     glutMainLoop();
     
@@ -73,11 +104,20 @@ void draw()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    camera.Apply();
+    light0.Apply();
+    light1.Apply();
 
-    //mesh->Render();
-    
-    glutSolidSphere(1, 50, 50);
+    glPushMatrix();
+	glRotatef(rotation, 0.0, 1.0, 0.0);
+        rotation += rotationStep;
+
+        for (auto it = meshes.begin(); it != meshes.end(); it++)
+        {
+	    (*it)->Render();
+        }
+    glPopMatrix();
+
+    camera.Apply();
 
     glutSwapBuffers();
     glutPostRedisplay();

@@ -89,6 +89,9 @@ void Mesh::Render()
     glTexCoordPointer(2, GL_FLOAT, 0, 0);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
+    material.Apply();
+
     glDrawArrays(GL_TRIANGLES, 0, verts.size());
 }
+
 

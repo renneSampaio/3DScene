@@ -45,6 +45,11 @@ void Material::SetSpecularColor(glm::vec4 color)
     specularColor = color;
 }
 
+void Material::SetEmissionColor(glm::vec4 color)
+{
+    emissionColor = color;
+}
+
 void Material::SetShininess(float s)
 {
     shininess = s;
